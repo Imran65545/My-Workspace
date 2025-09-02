@@ -11,57 +11,100 @@ export default function DashboardPage() {
   const [activeTab, setActiveTab] = useState("notes");
   const { data: session } = useSession();
 
-  // Debug: log session and user image
-  console.log("SESSION OBJECT:", session);
-  console.log("USER IMAGE:", session?.user?.image);
-
   return (
     <div className="min-h-screen bg-gray-100">
-      <nav className="bg-white shadow p-4 flex justify-between items-center">
-        <Link href="/" className="text-xl font-bold text-black hover:underline cursor-pointer">My Workspace</Link>
-        <div className="flex gap-4 items-center">
+      <nav className="bg-white/80 backdrop-blur shadow-sm border-b border-gray-200">
+        <div className="max-w-5xl mx-auto px-3 sm:px-4 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <Link href="/" className="text-lg font-bold text-gray-900 tracking-tight">
+              My Workspace
+            </Link>
+            <span className="hidden sm:inline text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 border border-gray-200">
+              Dashboard
+            </span>
+          </div>
+
+          <div className="flex items-center gap-3 sm:gap-6">
+            <div className="flex items-center bg-gray-100 rounded-xl p-1 border border-gray-200">
+              <button
+                onClick={() => setActiveTab("notes")}
+                className={`px-3 py-1.5 rounded-lg text-sm transition-all ${
+                  activeTab === "notes"
+                    ? "bg-white text-blue-600 shadow-sm border border-gray-200"
+                    : "text-gray-600 hover:text-gray-900"
+                }`}
+                aria-current={activeTab === "notes" ? "page" : undefined}
+              >
+                Notes
+              </button>
+              <button
+                onClick={() => setActiveTab("tasks")}
+                className={`px-3 py-1.5 rounded-lg text-sm transition-all ${
+                  activeTab === "tasks"
+                    ? "bg-white text-blue-600 shadow-sm border border-gray-200"
+                    : "text-gray-600 hover:text-gray-900"
+                }`}
+                aria-current={activeTab === "tasks" ? "page" : undefined}
+              >
+                Tasks
+              </button>
+            </div>
+
+            <div className="flex items-center gap-2 sm:gap-3">
+              {session?.user?.name && (
+                <span className="hidden sm:block text-sm text-gray-700">
+                  {session.user.name}
+                </span>
+              )}
+              {session?.user?.image && (
+                <img
+                  src={session.user.image}
+                  alt="Profile"
+                  className="w-9 h-9 rounded-full object-cover border border-gray-200 shadow-sm"
+                />
+              )}
+              <button
+                onClick={() => signOut({ callbackUrl: "/login" })}
+                className="text-sm text-red-600 hover:text-red-700 px-2 sm:px-3 py-1.5 border border-red-200 rounded-md bg-red-50 hover:bg-red-100 transition"
+              >
+                Logout
+              </button>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      <main className="p-3 sm:p-6 max-w-5xl mx-auto">
+        {activeTab === "notes" ? <NotesTab /> : <TasksTab />}
+      </main>
+
+      {/* Mobile bottom tab bar */}
+      <div className="sm:hidden fixed bottom-0 inset-x-0 z-40 border-t border-gray-200 bg-white/95 backdrop-blur">
+        <div className="max-w-5xl mx-auto px-4 py-2 flex items-center justify-around">
           <button
             onClick={() => setActiveTab("notes")}
-            className={
-              (activeTab === "notes"
-                ? "text-blue-600 font-semibold"
-                : "text-gray-500 hover:text-blue-500") +
-              " transition duration-200 hover:underline hover:scale-105"
-            }
+            className={`flex flex-col items-center text-xs ${
+              activeTab === "notes" ? "text-blue-600" : "text-gray-600"
+            }`}
           >
+            <span className={`w-8 h-8 rounded-full flex items-center justify-center mb-1 ${
+              activeTab === "notes" ? "bg-blue-50 border border-blue-200" : "bg-gray-50 border border-gray-200"
+            }`}>N</span>
             Notes
           </button>
           <button
             onClick={() => setActiveTab("tasks")}
-            className={
-              (activeTab === "tasks"
-                ? "text-blue-600 font-semibold"
-                : "text-gray-500 hover:text-blue-500") +
-              " transition duration-200 hover:underline hover:scale-105"
-            }
+            className={`flex flex-col items-center text-xs ${
+              activeTab === "tasks" ? "text-blue-600" : "text-gray-600"
+            }`}
           >
+            <span className={`w-8 h-8 rounded-full flex items-center justify-center mb-1 ${
+              activeTab === "tasks" ? "bg-blue-50 border border-blue-200" : "bg-gray-50 border border-gray-200"
+            }`}>T</span>
             Tasks
           </button>
-          <button
-            onClick={() => signOut({ callbackUrl: "/login" })}
-            className="text-red-600 font-semibold transition duration-200 hover:underline hover:scale-105"
-          >
-            Logout
-          </button>
-          {session?.user?.image && (
-            <img
-              src={session.user.image}
-              alt="Profile"
-              className="w-8 h-8 rounded-full object-cover ml-2 border border-gray-300"
-              style={{ display: "inline-block" }}
-            />
-          )}
         </div>
-      </nav>
-
-      <main className="p-4 max-w-4xl mx-auto">
-        {activeTab === "notes" ? <NotesTab /> : <TasksTab />}
-      </main>
+      </div>
     </div>
   );
 }
