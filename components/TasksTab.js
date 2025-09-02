@@ -200,7 +200,7 @@ export default function TasksTab() {
           {filteredTasks.map((task) => (
             <li
               key={task._id}
-              className="group flex items-center justify-between bg-white p-3 rounded-md border border-gray-200 hover:border-gray-300 hover:shadow-sm transition"
+              className="group flex flex-col sm:flex-row sm:items-center sm:justify-between bg-white p-3 rounded-md border border-gray-200 hover:border-gray-300 hover:shadow-sm transition gap-2"
               onDragOver={onDragOver}
               onDrop={() => onDrop(task._id)}
             >
@@ -254,14 +254,14 @@ export default function TasksTab() {
                     >
                       {task.text}
                     </span>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 flex-wrap">
                       {/* Priority badge */}
                       <select
                         value={task.priority || "medium"}
                         onChange={(e) => updateTaskMeta(task._id, { priority: e.target.value })}
                         onMouseDown={(e) => e.stopPropagation()}
                         onClick={(e) => e.stopPropagation()}
-                        className="text-xs px-2 py-1 rounded border border-gray-200 bg-gray-50 text-gray-700"
+                        className="text-xs px-2 py-1 rounded border border-gray-200 bg-gray-50 text-gray-700 min-w-[92px]"
                       >
                         <option value="low">Low</option>
                         <option value="medium">Medium</option>
@@ -274,26 +274,26 @@ export default function TasksTab() {
                         onChange={(e) => updateTaskMeta(task._id, { dueDate: e.target.value || null })}
                         onMouseDown={(e) => e.stopPropagation()}
                         onClick={(e) => e.stopPropagation()}
-                        className="text-xs px-2 py-1 rounded border border-gray-200 text-gray-700"
+                        className="text-xs px-2 py-1 rounded border border-gray-200 text-gray-700 min-w-[120px]"
                       />
                     </div>
                   </div>
-                  <div className="flex gap-2 items-center opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition">
+                  <div className="flex gap-2 items-center opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition w-full sm:w-auto justify-end flex-wrap">
                     <button
                       onClick={() => handleEdit(task)}
-                      className="text-sm text-blue-700 px-2 py-1 rounded hover:bg-blue-50"
+                      className="text-sm text-blue-700 px-2 py-1 rounded hover:bg-blue-50 whitespace-nowrap"
                     >
                       Edit
                     </button>
                     <button
                       onClick={() => handleDelete(task._id)}
-                      className="text-sm text-red-700 px-2 py-1 rounded hover:bg-red-50"
+                      className="text-sm text-red-700 px-2 py-1 rounded hover:bg-red-50 whitespace-nowrap"
                     >
                       Delete
                     </button>
                     <button
                       onClick={() => toggleDone(task._id, task.done)}
-                      className="text-sm text-gray-700 px-2 py-1 rounded hover:bg-gray-100"
+                      className="text-sm text-gray-700 px-2 py-1 rounded hover:bg-gray-100 whitespace-nowrap"
                     >
                       {task.done ? "Undo" : "Done"}
                     </button>
